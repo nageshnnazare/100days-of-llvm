@@ -19,6 +19,10 @@ This provides more advanced constant folding that relies on the Data Layout (e.g
 * **Header file:** `llvm-project/llvm/include/llvm/Analysis/ConstantFolding.h`
 * **Source file:** `llvm-project/llvm/lib/Analysis/ConstantFolding.cpp`
 
+> [!TIP]
+> **Want a deep dive into these files?**
+> Read the companion guide: [Day 1 Extra Notes: A Deep Dive into Constant Folding](Day-01-1-Extra-ConstantFold-DeepDive.md) where we break down the most important C++ functions inside these files (like `ConstantFoldBinaryInstruction` and how `DataLayout` works).
+
 ## 3. Understanding the Infrastructure
 
 To understand how constant folding works in LLVM, you need to understand a few core concepts of the LLVM IR infrastructure:

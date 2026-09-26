@@ -543,3 +543,8 @@ Welcome to the 100 Days of LLVM Challenge! This plan breaks down the massive LLV
 1. Every day, create or read the corresponding `.md` file in this directory.
 2. Open the source code in `llvm-project` and trace through the main entry points.
 3. Write small C/C++ examples and compile them using `clang -O0 -S -emit-llvm` vs `clang -O3 -S -emit-llvm` to see the optimizations in action!
+
+---
+
+## Resources
+* [Glossary of Core LLVM Optimization Passes](Glossary-of-LLVM-Passes.md): A quick cheat-sheet explaining what passes like SROA, EarlyCSE, and LICM actually do, with before/after examples.
