@@ -18,7 +18,7 @@ Welcome to the 100 Days of LLVM Challenge! This plan breaks down the massive LLV
 ### **Day 2: Instruction Combining (InstCombine)**
 * **Concepts:** Pattern matching for peephole optimizations, simplifying redundant instructions, algebraic simplifications.
 * **Code Location:** `llvm/lib/Transforms/InstCombine/`
-* **Status:** *Upcoming*
+* **Status:** Created in [Day-02-InstCombine.md](Day-02-InstCombine.md)
 
 ### **Day 3: Control Flow Graphs & Basic Blocks**
 * **Concepts:** Iterating over functions, basic blocks, and instructions. Understanding the CFG edges.
