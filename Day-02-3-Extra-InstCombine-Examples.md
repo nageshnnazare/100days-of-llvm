@@ -8,6 +8,31 @@ To test these examples, compile them to LLVM IR and run the InstCombine pass:
 
 ---
 
+## Diagram
+
+```text
+   worklist = every instruction
+            |
+            v
+      +-----------+
+      | pop inst I|
+      +-----------+
+            |
+     PatternMatch?
+       /         \
+     yes          no
+      |            |
+      v            v
+  replace I      next
+  with simpler
+  value
+      |
+      +---- push users of I back on the worklist
+                 (one fold exposes the next)
+```
+
+InstCombine is a worklist, not a single walk. Replacing `add X, 0` with `X` can make a user foldable, so that user goes back on the list. The patterns are canonical: the pass prefers one shape (`icmp slt` rather than a mirrored predicate) so later patterns only have to match one spelling.
+
 ## Example 1: Algebraic Simplification
 InstCombine excels at collapsing algebraic identities, which often arise after other optimizations (like function inlining or constant folding) have run.
 

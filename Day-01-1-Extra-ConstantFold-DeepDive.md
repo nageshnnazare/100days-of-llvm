@@ -4,6 +4,27 @@ This document takes a closer look at the actual C++ code that performs Constant 
 
 ---
 
+## Diagram
+
+```text
+   IRBuilder::CreateAdd(%a, %b)
+              |
+              v
+       +--------------+
+       |ConstantFolder|
+       +--------------+
+          /            \
+   both Constant?      one is not
+        /                  \
+       v                    v
+  ConstantInt           an `add` Instruction
+  (folded now)          (left for a later pass)
+
+   2 + 3  ->  5          %x + 2  stays `add`
+```
+
+Folding happens while the IR is being built, before any pass runs. If both operands are constants, the builder never emits the instruction. If either operand is a runtime value, the `add` stays, and InstCombine or SCCP may fold it later.
+
 ## 1. The Target-Independent Layer (`lib/IR/ConstantFold.cpp`)
 
 This file is responsible for folding constants based purely on the rules of mathematics and the LLVM IR type system. It does not know what CPU you are compiling for. If you ask it to fold `1 + 1`, it knows the answer is `2`. 

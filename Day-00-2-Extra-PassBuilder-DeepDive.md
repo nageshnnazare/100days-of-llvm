@@ -6,6 +6,33 @@ This is a massive file (over 2500 lines), but you don't need to read it line-by-
 
 ---
 
+## Diagram
+
+```text
+                    opt / clang -O2
+                          |
+                          v
+                    +-----------+
+                    |PassBuilder|  parses "default<O2>" or "-passes=..."
+                    +-----------+
+                          |
+          +---------------+---------------+
+          v               v               v
+   ModulePassManager  CGSCCPassManager  FunctionPassManager
+   GlobalDCE, IPSCCP   Inliner           InstCombine, SROA, LICM, ...
+          |               |               |
+          +---------------+---------------+
+                          |
+                          v
+                  AnalysisManager
+            DT, AA, SCEV, LoopInfo, ...
+                          |
+              PreservedAnalyses says which
+              of those caches are still valid
+```
+
+Read top to bottom. A pipeline string is not a list of free functions: PassBuilder turns it into nested pass managers. A function pass only sees one function. A CGSCC pass sees a strongly connected component of the call graph, which is why the inliner lives there. After a pass returns, the analysis manager throws away any analysis the pass did not preserve.
+
 ## 1. The Pass Hierarchy (The 4 Pass Managers)
 
 LLVM organizes optimizations from the "widest" scope down to the "narrowest" scope. `PassBuilderPipelines.cpp` nests these managers inside each other:

@@ -2,6 +2,27 @@
 
 This file provides additional practical C examples to demonstrate how Constant Folding and early expression evaluation work in LLVM.
 
+## Diagram
+
+```text
+   IRBuilder::CreateAdd(%a, %b)
+              |
+              v
+       +--------------+
+       |ConstantFolder|
+       +--------------+
+          /            \
+   both Constant?      one is not
+        /                  \
+       v                    v
+  ConstantInt           an `add` Instruction
+  (folded now)          (left for a later pass)
+
+   2 + 3  ->  5          %x + 2  stays `add`
+```
+
+Folding happens while the IR is being built, before any pass runs. If both operands are constants, the builder never emits the instruction. If either operand is a runtime value, the `add` stays, and InstCombine or SCCP may fold it later.
+
 ## Example 1: Floating Point Folding
 LLVM handles floating-point constants just as easily as integers, provided the math doesn't rely on runtime environment specifics (like dynamic rounding modes).
 

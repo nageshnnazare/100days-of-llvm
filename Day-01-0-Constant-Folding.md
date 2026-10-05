@@ -1,5 +1,26 @@
 # Day 1: Constant Folding
 
+## Diagram
+
+```text
+   IRBuilder::CreateAdd(%a, %b)
+              |
+              v
+       +--------------+
+       |ConstantFolder|
+       +--------------+
+          /            \
+   both Constant?      one is not
+        /                  \
+       v                    v
+  ConstantInt           an `add` Instruction
+  (folded now)          (left for a later pass)
+
+   2 + 3  ->  5          %x + 2  stays `add`
+```
+
+Folding happens while the IR is being built, before any pass runs. If both operands are constants, the builder never emits the instruction. If either operand is a runtime value, the `add` stays, and InstCombine or SCCP may fold it later.
+
 ## 1. What is Constant Folding?
 Constant folding is a foundational compiler optimization where expressions consisting entirely of constants are evaluated at compile time rather than at runtime. This reduces the number of instructions executed and shrinks the size of the final executable.
 

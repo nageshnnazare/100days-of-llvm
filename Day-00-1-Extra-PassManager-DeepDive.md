@@ -4,6 +4,33 @@ This document serves as an in-depth companion to Day 0, breaking down the exact 
 
 ---
 
+## Diagram
+
+```text
+                    opt / clang -O2
+                          |
+                          v
+                    +-----------+
+                    |PassBuilder|  parses "default<O2>" or "-passes=..."
+                    +-----------+
+                          |
+          +---------------+---------------+
+          v               v               v
+   ModulePassManager  CGSCCPassManager  FunctionPassManager
+   GlobalDCE, IPSCCP   Inliner           InstCombine, SROA, LICM, ...
+          |               |               |
+          +---------------+---------------+
+                          |
+                          v
+                  AnalysisManager
+            DT, AA, SCEV, LoopInfo, ...
+                          |
+              PreservedAnalyses says which
+              of those caches are still valid
+```
+
+Read top to bottom. A pipeline string is not a list of free functions: PassBuilder turns it into nested pass managers. A function pass only sees one function. A CGSCC pass sees a strongly connected component of the call graph, which is why the inliner lives there. After a pass returns, the analysis manager throws away any analysis the pass did not preserve.
+
 ## 1. `PassInfoMixin<DerivedT>` (The Pass Boilerplate)
 
 **What it is:** 

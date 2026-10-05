@@ -1,5 +1,30 @@
 # Day 2: Instruction Combining (InstCombine)
 
+## Diagram
+
+```text
+   worklist = every instruction
+            |
+            v
+      +-----------+
+      | pop inst I|
+      +-----------+
+            |
+     PatternMatch?
+       /         \
+     yes          no
+      |            |
+      v            v
+  replace I      next
+  with simpler
+  value
+      |
+      +---- push users of I back on the worklist
+                 (one fold exposes the next)
+```
+
+InstCombine is a worklist, not a single walk. Replacing `add X, 0` with `X` can make a user foldable, so that user goes back on the list. The patterns are canonical: the pass prefers one shape (`icmp slt` rather than a mirrored predicate) so later patterns only have to match one spelling.
+
 ## 1. What is Instruction Combining?
 Instruction Combining (commonly called **InstCombine**) is a fundamental peephole optimization pass in LLVM. Its goal is to simplify instructions and transform sequences of instructions into simpler, more efficient forms. 
 

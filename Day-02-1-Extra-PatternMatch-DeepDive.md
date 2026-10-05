@@ -8,6 +8,25 @@ It is heavily used in InstCombine, but you will also find it used in Instruction
 
 ---
 
+## Diagram
+
+```text
+   instruction I
+        |
+        v
+   match(I, m_Add(m_Value(X), m_Zero()))
+        |
+        +-- pattern walks the operands
+        |     opcode == add?
+        |       operand 0 -> bind X
+        |       operand 1 -> constant 0?
+        |
+        +-- true:  X is bound, fold I to X
+        +-- false: try the next pattern
+```
+
+`match` walks one instruction the way a handwritten chain of `dyn_cast` would, and binds the pieces you name. `m_Add(m_Value(X), m_Zero())` is the pattern "an add whose second operand is the constant zero." On a match, `X` points at the other operand and the caller replaces the instruction.
+
 ## 1. The Problem it Solves
 Suppose you want to write an optimization that transforms `(X + 0)` into just `X`.
 Without PatternMatch, verifying this structure requires verbose and error-prone casting:
