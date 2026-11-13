@@ -39656,7 +39656,7 @@ Combine \`-debug-only=<DEBUG_TYPE>\` with \`-pass-remarks\` / \`-pass-remarks-mi
 
 Loop and AA topics form a dependency chain: simplify/LCSSA → rotate/unswitch → SCEV/indvars → idiom/interchange → vectorize. Alias analyses (BasicAA, TBAA) and MemorySSA sit underneath almost every memory transform. TLI/TTI decide availability and profitability at the edges of the mid-end. Re-read neighboring day notes when a failure looks like “wrong pass” but is actually a missing analysis fact.
 ` },
-  { name: `107. Day 34 1 Extra Scev Deepdive`, path: `Day-34-1-Extra-SCEV-DeepDive.md`, dir: ``, words: 1534, mins: 8, body: `<h1 id="day-34-extra-scev--deep-dive">Day 34 Extra: SCEV — Deep Dive<\/h1>
+  { name: `107. Day 34 1 Extra Scev Deepdive`, path: `Day-34-1-Extra-SCEV-DeepDive.md`, dir: ``, words: 1536, mins: 8, body: `<h1 id="day-34-extra-scev--deep-dive">Day 34 Extra: SCEV — Deep Dive<\/h1>
 <p>Sources: <a href="https://github.com/llvm/llvm-project/blob/main/llvm/lib/Analysis/ScalarEvolution.cpp">ScalarEvolution.cpp<\/a>, <a href="https://github.com/llvm/llvm-project/blob/main/llvm/lib/Analysis/ScalarEvolutionExpander.cpp">ScalarEvolutionExpander.cpp<\/a>, <a href="https://github.com/llvm/llvm-project/blob/main/llvm/include/llvm/Analysis/ScalarEvolutionExpressions.h">ScalarEvolutionExpressions.h<\/a>. Parent: <a href="Day-34-0-SCEV.md">Day-34-0-SCEV.md<\/a>.<\/p>
 <details class="sec-fold" open><summary class="sec-summary"><h2 id="diagram">Diagram<\/h2><\/summary><div class="sec-body">
 <pre><code class="pygcode language-text" data-lang="text">   %i = phi i32 [ 0, %pre ], [ %i.next, %latch ]
@@ -39670,7 +39670,7 @@ Loop and AA topics form a dependency chain: simplify/LCSSA → rotate/unswitch �
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}&lt;header&gt;
+        { %base,+,4 }&lt;header&gt;
 <\/code><\/pre>
 <p>SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence <code>{start,+,step}<\/code>. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as <code>nsw<\/code> stays a more pessimistic expression.<\/p>
 <\/div><\/details><h2 id="expression-dag-design">Expression DAG design<\/h2>
@@ -39796,7 +39796,7 @@ Sources: [ScalarEvolution.cpp](https://github.com/llvm/llvm-project/blob/main/ll
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}<header>
+        { %base,+,4 }<header>
 \`\`\`
 
 SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence \`{start,+,step}\`. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as \`nsw\` stays a more pessimistic expression.
@@ -39959,7 +39959,7 @@ Always generate IR with \`clang -S -emit-llvm -O1 -Xclang -disable-llvm-passes\`
 
 When comparing before/after, prefer \`diff -u\` on files produced by the same opt pipeline with one pass removed. That isolates the transform better than comparing against clang -O3, which runs dozens of passes.
 ` },
-  { name: `108. Day 34 2 Extra Scev Examples`, path: `Day-34-2-Extra-SCEV-Examples.md`, dir: ``, words: 740, mins: 4, body: `<h1 id="day-34-extra-scev--examples">Day 34 Extra: SCEV — Examples<\/h1>
+  { name: `108. Day 34 2 Extra Scev Examples`, path: `Day-34-2-Extra-SCEV-Examples.md`, dir: ``, words: 744, mins: 4, body: `<h1 id="day-34-extra-scev--examples">Day 34 Extra: SCEV — Examples<\/h1>
 <pre><code class="pygcode language-bash has-linenos" data-lang="bash"><span class="cl" id="L543-1"><a class="lnr" href="#L543-1" tabindex="-1" aria-hidden="true"><\/a>clang<span class="w"> <\/span>-S<span class="w"> <\/span>-emit-llvm<span class="w"> <\/span>-O1<span class="w"> <\/span>-Xclang<span class="w"> <\/span>-disable-llvm-passes<span class="w"> <\/span>f.c<span class="w"> <\/span>-o<span class="w"> <\/span>f.ll<\/span><span class="cl" id="L543-2"><a class="lnr" href="#L543-2" tabindex="-1" aria-hidden="true"><\/a>opt<span class="w"> <\/span>-passes<span class="o">=<\/span><span class="s1">&#39;print&lt;scalar-evolution&gt;&#39;<\/span><span class="w"> <\/span>-disable-output<span class="w"> <\/span>f.ll<\/span><\/code><\/pre>
 <p>Parent: <a href="Day-34-0-SCEV.md">Day-34-0-SCEV.md<\/a>.<\/p>
 <hr />
@@ -39975,7 +39975,7 @@ When comparing before/after, prefer \`diff -u\` on files produced by the same op
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}&lt;header&gt;
+        { %base,+,4 }&lt;header&gt;
 <\/code><\/pre>
 <p>SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence <code>{start,+,step}<\/code>. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as <code>nsw<\/code> stays a more pessimistic expression.<\/p>
 <\/div><\/details><details class="sec-fold" open><summary class="sec-summary"><h2 id="example-1-basic-integer-addrec">Example 1: Basic integer AddRec<\/h2><\/summary><div class="sec-body">
@@ -39997,7 +39997,7 @@ When comparing before/after, prefer \`diff -u\` on files produced by the same op
 <h3 id="commands_1">Commands<\/h3>
 <p>Same printer.<\/p>
 <h3 id="expected-result_1">Expected result<\/h3>
-<p>The pointer used for stores evolves as <code>{%p,+,4}&lt;loop&gt;<\/code> (for 4-byte <code>int<\/code>), while <code>i<\/code> is <code>{0,+,1}<\/code>.<\/p>
+<p>The pointer used for stores evolves as <code>{ %p,+,4 }&lt;loop&gt;<\/code> (for 4-byte <code>int<\/code>), while <code>i<\/code> is <code>{0,+,1}<\/code>.<\/p>
 <h3 id="why-it-fires_1">Why it fires<\/h3>
 <p>GEP/pointer PHI with constant step.<\/p>
 <h3 id="counterexample_1">Counterexample<\/h3>
@@ -40097,7 +40097,7 @@ Parent: [Day-34-0-SCEV.md](Day-34-0-SCEV.md).
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}<header>
+        { %base,+,4 }<header>
 \`\`\`
 
 SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence \`{start,+,step}\`. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as \`nsw\` stays a more pessimistic expression.
@@ -40159,7 +40159,7 @@ Same printer.
 
 ### Expected result
 
-The pointer used for stores evolves as \`{%p,+,4}<loop>\` (for 4-byte \`int\`), while \`i\` is \`{0,+,1}\`.
+The pointer used for stores evolves as \`{ %p,+,4 }<loop>\` (for 4-byte \`int\`), while \`i\` is \`{0,+,1}\`.
 
 ### Why it fires
 
