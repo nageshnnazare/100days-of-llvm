@@ -16,7 +16,7 @@ Sources: [ScalarEvolution.cpp](https://github.com/llvm/llvm-project/blob/main/ll
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}<header>
+        { %base,+,4 }<header>
 ```
 
 SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence `{start,+,step}`. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as `nsw` stays a more pessimistic expression.
