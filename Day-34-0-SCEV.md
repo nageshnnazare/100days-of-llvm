@@ -27,7 +27,7 @@ Indvars, unrolling, vectorization legality helpers, loop idiom, interchange, and
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}<header>
+        { %base,+,4 }<header>
 ```
 
 SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence `{start,+,step}`. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as `nsw` stays a more pessimistic expression.
@@ -51,7 +51,7 @@ SCEV is a normal form for integer recurrences. An induction variable becomes an 
 
 ### AddRec
 
-`{0,+,1}<%loop>` means: at iteration 0 the value is 0; each iteration adds 1. Pointers use byte steps: `{%p,+,4}<%loop>` for an `i32*` walk (opaque ptr + GEP size).
+`{0,+,1}<%loop>` means: at iteration 0 the value is 0; each iteration adds 1. Pointers use byte steps: `{ %p,+,4 }<%loop>` for an `i32*` walk (opaque ptr + GEP size).
 
 ### Loop disposition
 
@@ -126,7 +126,7 @@ void f(int *p, int n) {
 Typical SCEV:
 
 - `%i` → `{0,+,1}<%loop>`
-- Store pointer → `{%p,+,4}<%loop>` (if `sizeof(int)==4`)
+- Store pointer → `{ %p,+,4 }<%loop>` (if `sizeof(int)==4`)
 - Trip-count related SCEVs → Day 35
 
 ## Reading order
