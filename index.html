@@ -39186,7 +39186,7 @@ Non-volatile \`zap\` (Example 2).
 | Diamond CFG | Non-local / MemoryPhi |
 | Volatile | No merge |
 ` },
-  { name: `106. Day 34 0 Scev`, path: `Day-34-0-SCEV.md`, dir: ``, words: 1542, mins: 8, body: `<h1 id="day-34-scalar-evolution-scalar-evolution">Day 34: Scalar Evolution (<code>scalar-evolution<\/code>)<\/h1>
+  { name: `106. Day 34 0 Scev`, path: `Day-34-0-SCEV.md`, dir: ``, words: 1548, mins: 8, body: `<h1 id="day-34-scalar-evolution-scalar-evolution">Day 34: Scalar Evolution (<code>scalar-evolution<\/code>)<\/h1>
 <p>ScalarEvolution (SCEV) is LLVM’s algebra for integer and pointer values in loops: it maps IR values to expressions, especially AddRec inductions <code>{start,+,step}&lt;loop&gt;<\/code>. Almost every serious loop pass depends on it. Deep dive: <a href="Day-34-1-Extra-SCEV-DeepDive.md">Day-34-1-Extra-SCEV-DeepDive.md<\/a>. Examples: <a href="Day-34-2-Extra-SCEV-Examples.md">Day-34-2-Extra-SCEV-Examples.md<\/a>. Trip counts specifically: Day 35.<\/p>
 <h2 id="why-this-exists">Why this exists<\/h2>
 <p>Pattern matching IR PHIs by hand does not scale. SCEV answers:<\/p>
@@ -39209,7 +39209,7 @@ Non-volatile \`zap\` (Example 2).
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}&lt;header&gt;
+        { %base,+,4 }&lt;header&gt;
 <\/code><\/pre>
 <p>SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence <code>{start,+,step}<\/code>. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as <code>nsw<\/code> stays a more pessimistic expression.<\/p>
 <\/div><\/details><details class="sec-fold" open><summary class="sec-summary"><h2 id="the-idea">The idea<\/h2><\/summary><div class="sec-body">
@@ -39258,7 +39258,7 @@ Non-volatile \`zap\` (Example 2).
 <\/table>
 <p><strong>SCEV does not model floats.<\/strong> Floating inductions are out of scope.<\/p>
 <h3 id="addrec">AddRec<\/h3>
-<p><code>{0,+,1}&lt;%loop&gt;<\/code> means: at iteration 0 the value is 0; each iteration adds 1. Pointers use byte steps: <code>{%p,+,4}&lt;%loop&gt;<\/code> for an <code>i32*<\/code> walk (opaque ptr + GEP size).<\/p>
+<p><code>{0,+,1}&lt;%loop&gt;<\/code> means: at iteration 0 the value is 0; each iteration adds 1. Pointers use byte steps: <code>{ %p,+,4 }&lt;%loop&gt;<\/code> for an <code>i32*<\/code> walk (opaque ptr + GEP size).<\/p>
 <h3 id="loop-disposition">Loop disposition<\/h3>
 <ul>
 <li><strong>Invariant:<\/strong> no dependence on the loop’s iteration<\/li>
@@ -39333,7 +39333,7 @@ Non-volatile \`zap\` (Example 2).
 <p>Typical SCEV:<\/p>
 <ul>
 <li><code>%i<\/code> → <code>{0,+,1}&lt;%loop&gt;<\/code><\/li>
-<li>Store pointer → <code>{%p,+,4}&lt;%loop&gt;<\/code> (if <code>sizeof(int)==4<\/code>)<\/li>
+<li>Store pointer → <code>{ %p,+,4 }&lt;%loop&gt;<\/code> (if <code>sizeof(int)==4<\/code>)<\/li>
 <li>Trip-count related SCEVs → Day 35<\/li>
 <\/ul>
 <h2 id="reading-order">Reading order<\/h2>
@@ -39443,7 +39443,7 @@ Indvars, unrolling, vectorization legality helpers, loop idiom, interchange, and
 
    %p = getelementptr i32, ptr %base, i32 %i
    SCEV of the pointer:
-        {%base,+,4}<header>
+        { %base,+,4 }<header>
 \`\`\`
 
 SCEV is a normal form for integer recurrences. An induction variable becomes an add recurrence \`{start,+,step}\`. A GEP becomes a recurrence in bytes. Two IVs that look different in the IR often become the same SCEV, which is how trip counts, dependence distances, and legality checks compare them. A value with a possible overflow that SCEV cannot treat as \`nsw\` stays a more pessimistic expression.
@@ -39467,7 +39467,7 @@ SCEV is a normal form for integer recurrences. An induction variable becomes an 
 
 ### AddRec
 
-\`{0,+,1}<%loop>\` means: at iteration 0 the value is 0; each iteration adds 1. Pointers use byte steps: \`{%p,+,4}<%loop>\` for an \`i32*\` walk (opaque ptr + GEP size).
+\`{0,+,1}<%loop>\` means: at iteration 0 the value is 0; each iteration adds 1. Pointers use byte steps: \`{ %p,+,4 }<%loop>\` for an \`i32*\` walk (opaque ptr + GEP size).
 
 ### Loop disposition
 
@@ -39542,7 +39542,7 @@ void f(int *p, int n) {
 Typical SCEV:
 
 - \`%i\` → \`{0,+,1}<%loop>\`
-- Store pointer → \`{%p,+,4}<%loop>\` (if \`sizeof(int)==4\`)
+- Store pointer → \`{ %p,+,4 }<%loop>\` (if \`sizeof(int)==4\`)
 - Trip-count related SCEVs → Day 35
 
 ## Reading order
