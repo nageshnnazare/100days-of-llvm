@@ -9,7 +9,7 @@
 <!-- Typography -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Google+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600&family=Source+Serif+4:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Google+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600&family=Source+Serif+4:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
 <!-- Syntax highlighting is baked in at build time (Pygments); no runtime highlighter needed. -->
 <script>
 window.MathJax = {
@@ -128,7 +128,7 @@ window.MathJax = {
     --nav-hl-toc-bg: rgba(230,180,80,0.16);
     --scrollbar-thumb: #2a2e40;
 
-    /* Prose ink colors (strategy notes). Dark-mode lifts of the light hues
+    /* Prose ink colors. Dark-mode lifts of the light hues
        so rust / navy / olive / purple / fail / pass stay readable on ink. */
     --gc: #e8926a;
     --cc: #8eb4e3;
@@ -225,7 +225,7 @@ window.MathJax = {
     --nav-hl-toc-bg: rgba(184,115,15,0.14);
     --scrollbar-thumb: #d0d4e2;
 
-    /* Prose ink colors — exact strategy-notes hues on cream paper. */
+    /* Prose ink colors on cream paper. */
     --gc: #9a3412;
     --cc: #1d4e89;
     --st: #3f6212;
@@ -1718,7 +1718,7 @@ body.nav-condensed .nav-doc-title {
 .tab-content strong { color: var(--text-strong); font-weight: 700; }
 .tab-content em { color: var(--text-primary); font-style: italic; }
 
-/* Colored prose, same classes as the strategy notes:
+/* Colored prose:
    {gc}…{/gc} {cc}…{/cc} {st}…{/st} {dy}…{/dy} {fail}…{/fail} {pass}…{/pass}
    Aliases (rust, blue, green, …) compile to these classes. Kept off the
    diagram color names (green, red, …) so ```diagram boxes are not restyled.
@@ -1785,6 +1785,82 @@ body[data-scheme="paper"][data-theme="light"] .tab-content code.has-linenos .cl:
 body[data-scheme="paper"][data-theme="light"] .tab-content code.has-linenos .cl.line-active {
     background: rgba(28, 25, 21, 0.06);
 }
+
+/* Sage: Space Grotesk headings and table heads over Inter prose, flat
+   cards, no shadows. Colors come from SCHEME_UI / SYNTAX_SCHEMES. Headings
+   keep their own face, so the Aa reading-font picker only changes prose. */
+body[data-scheme="sage"] .tab-content {
+    font-size: calc(16px * var(--font-scale, 1));
+    line-height: 1.65;
+}
+body[data-scheme="sage"] .tab-content h1,
+body[data-scheme="sage"] .tab-content h2,
+body[data-scheme="sage"] .tab-content h3,
+body[data-scheme="sage"] .tab-content h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+body[data-scheme="sage"] .tab-content h2 {
+    border-left: none;
+    padding-left: 0;
+}
+body[data-scheme="sage"] .tab-content th {
+    font-family: var(--font-display);
+    font-size: calc(13px * var(--font-scale, 1));
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--text-primary);
+}
+body[data-scheme="sage"] .tab-content table {
+    background: var(--paper-card);
+    box-shadow: none;
+}
+body[data-scheme="sage"] .tab-content pre {
+    box-shadow: none;
+}
+
+/* === Diagrams: inline SVG ===
+   Author a figure as raw HTML in Markdown, with no blank lines inside it:
+     <figure><div class="fig"><svg viewBox="0 0 720 200"> ... </svg></div>
+     <figcaption>Figure 1.1. Caption.</figcaption></figure>
+   The s-* and t-* classes pick colors and fonts from the active theme, so a
+   diagram follows light/dark and every color scheme. Accent is the theme's
+   accent; the "warn" role uses the theme's secondary highlight (the TOC hue). */
+.tab-content figure { margin: 24px 0; }
+.tab-content .fig {
+    overflow-x: auto;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-main);
+    border-radius: var(--radius-md);
+    padding: 14px;
+}
+.tab-content .fig svg { display: block; width: 100%; min-width: 560px; height: auto; }
+.tab-content figcaption {
+    font-size: calc(13px * var(--font-scale, 1));
+    color: var(--text-muted);
+    margin-top: 8px;
+    max-width: 68ch;
+}
+/* Shapes and lines */
+.tab-content .fig .s-bg         { fill: var(--bg-sidebar); }
+.tab-content .fig .s-box        { fill: var(--bg-sidebar); stroke: var(--border-main); stroke-width: 1.2; }
+.tab-content .fig .s-soft       { fill: var(--bg-code-block); stroke: var(--border-main); stroke-width: 1.2; }
+.tab-content .fig .s-acc        { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+.tab-content .fig .s-accfill    { fill: var(--accent); }
+.tab-content .fig .s-warn       { fill: var(--nav-hl-toc-bg); stroke: var(--nav-hl-toc); stroke-width: 1.4; }
+.tab-content .fig .s-warnfill   { fill: var(--nav-hl-toc); }
+.tab-content .fig .s-line       { stroke: var(--border-main); stroke-width: 1; fill: none; }
+.tab-content .fig .s-arrow      { stroke: var(--text-muted); stroke-width: 1.4; fill: none; }
+.tab-content .fig .s-arrow-acc  { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+.tab-content .fig .s-arrow-warn { stroke: var(--nav-hl-toc); stroke-width: 1.6; fill: none; }
+/* Text */
+.tab-content .fig .t       { fill: var(--text-primary); font-family: var(--font-sans); font-size: 12px; }
+.tab-content .fig .t-b     { fill: var(--text-strong); font-family: var(--font-display, var(--font-sans)); font-size: 13px; font-weight: 600; }
+.tab-content .fig .t-m     { fill: var(--text-muted); font-family: var(--font-sans); font-size: 11px; }
+.tab-content .fig .t-mono  { fill: var(--text-primary); font-family: var(--font-mono); font-size: 11px; }
+.tab-content .fig .t-acc   { fill: var(--accent); font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
+.tab-content .fig .t-warn  { fill: var(--nav-hl-toc); font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
 
 /* === Inline code === */
 .tab-content code {
@@ -2135,6 +2211,46 @@ body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .na 
 body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .nt { color: #9a3412; }
 body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .err { color: #9f1239; }
 body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .c, body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .ch, body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .cm, body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .c1, body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .cs, body[data-scheme="paper"][data-theme="light"] .tab-content pre code.pygcode .cd { font-style: italic; }
+body[data-scheme="sage"][data-theme="dark"] { --bg-body: #0e1412; --bg-sidebar: #141c19; --bg-content: #0e1412; --bg-header: rgba(20,28,25,0.82); --glass-bg: linear-gradient(180deg, rgba(20,28,25,0.85) 0%, rgba(20,28,25,0.6) 100%); --glass-border: rgba(38,51,46,0.7); --bg-code-block: #111a17; --bg-code-inline: #111a17; --bg-table-even: #111a17; --bg-table-head: #111a17; --bg-blockquote: #111a17; --bg-search-input: #111a17; --bg-search-overlay-inner: #141c19; --bg-sr-item-hover: #111a17; --bg-sr-item-border: #26332e; --border-main: #26332e; --border-header: #26332e; --border-input: #26332e; --border-table: #26332e; --border-code: #26332e; --text-primary: #e2eae7; --text-secondary: #95a59f; --text-muted: #7f8e88; --text-strong: #e2eae7; --text-blockquote: #95a59f; --text-heading-h1: #e2eae7; --text-heading-h2: #e2eae7; --text-heading-h3: #e2eae7; --text-heading-h4: #e2eae7; --text-code-inline: #3fcfa5; --text-link: #3fcfa5; --text-link-hover: #75dcbe; --text-tab-active: #3fcfa5; --text-table-header: #95a59f; --accent: #3fcfa5; --accent-soft: rgba(63,207,165,0.14); --accent-strong: rgba(63,207,165,0.3); --sidebar-toggle-bg: #111a17; --sidebar-toggle-border: #26332e; --sidebar-toggle-hover: #262f2c; --nav-active-bg: rgba(63,207,165,0.12); --nav-doc-active-bg: #3fcfa5; --nav-doc-active-fg: #0e1412; --nav-hl-doc: #3fcfa5; --nav-hl-doc-bg: rgba(63,207,165,0.14); --nav-hl-toc: #f2a654; --nav-hl-toc-bg: rgba(242,166,84,0.15); --scrollbar-thumb: #424e4a; --font-sans: "Inter", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; --shadow-sm: none; --shadow-md: none; --shadow-lg: none; --paper-card: #141c19; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre { background: #111a17; border-color: #26332e; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code { color: #e2eae7; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .c, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .ch, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cm, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cp, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cpf, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .c1, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cs, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cd { color: #95a59f; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .k, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .kc, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .kd, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .kn, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .kp, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .kr { color: #3fcfa5; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .kt { color: #7cc4ec; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .o, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .ow { color: #c3d0cb; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .s, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sa, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sb, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sc, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .dl, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sd, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .s2, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .se, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sh, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .si, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sx, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .sr, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .s1, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .ss { color: #f2a654; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .m, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .mb, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .mf, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .mh, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .mi, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .mo, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .il { color: #c8a2f0; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nf, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .fm { color: #8fd3f0; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nd { color: #c8a2f0; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nc, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .ne { color: #7cc4ec; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nn { color: #7cc4ec; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nb, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .bp { color: #3fcfa5; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .no { color: #c8a2f0; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nv, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .vc, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .vg, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .vi, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nl { color: #e2eae7; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .na { color: #7cc4ec; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .nt { color: #3fcfa5; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .err { color: #f97066; }
+body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .c, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .ch, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cm, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .c1, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cs, body[data-scheme="sage"][data-theme="dark"] .tab-content pre code.pygcode .cd { font-style: italic; }
+body[data-scheme="sage"][data-theme="light"] { --bg-body: #f5f7f6; --bg-sidebar: #ffffff; --bg-content: #f5f7f6; --bg-header: rgba(255,255,255,0.82); --glass-bg: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 100%); --glass-border: rgba(216,224,220,0.7); --bg-code-block: #edf2f0; --bg-code-inline: #edf2f0; --bg-table-even: #edf2f0; --bg-table-head: #edf2f0; --bg-blockquote: #edf2f0; --bg-search-input: #edf2f0; --bg-search-overlay-inner: #ffffff; --bg-sr-item-hover: #edf2f0; --bg-sr-item-border: #d8e0dc; --border-main: #d8e0dc; --border-header: #d8e0dc; --border-input: #d8e0dc; --border-table: #d8e0dc; --border-code: #d8e0dc; --text-primary: #17211e; --text-secondary: #56645f; --text-muted: #7b8883; --text-strong: #17211e; --text-blockquote: #56645f; --text-heading-h1: #17211e; --text-heading-h2: #17211e; --text-heading-h3: #17211e; --text-heading-h4: #17211e; --text-code-inline: #0b7a60; --text-link: #0b7a60; --text-link-hover: #085845; --text-tab-active: #0b7a60; --text-table-header: #56645f; --accent: #0b7a60; --accent-soft: rgba(11,122,96,0.14); --accent-strong: rgba(11,122,96,0.3); --sidebar-toggle-bg: #edf2f0; --sidebar-toggle-border: #d8e0dc; --sidebar-toggle-hover: #d8dddb; --nav-active-bg: rgba(11,122,96,0.12); --nav-doc-active-bg: #0b7a60; --nav-doc-active-fg: #f5f7f6; --nav-hl-doc: #0b7a60; --nav-hl-doc-bg: rgba(11,122,96,0.14); --nav-hl-toc: #a8550a; --nav-hl-toc-bg: rgba(168,85,10,0.15); --scrollbar-thumb: #bbc3c0; --font-sans: "Inter", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; --shadow-sm: none; --shadow-md: none; --shadow-lg: none; --paper-card: #ffffff; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre { background: #edf2f0; border-color: #d8e0dc; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code { color: #17211e; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .c, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .ch, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cm, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cp, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cpf, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .c1, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cs, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cd { color: #56645f; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .k, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .kc, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .kd, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .kn, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .kp, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .kr { color: #0b7a60; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .kt { color: #1f5f8b; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .o, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .ow { color: #3a4a45; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .s, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sa, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sb, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sc, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .dl, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sd, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .s2, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .se, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sh, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .si, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sx, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .sr, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .s1, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .ss { color: #a8550a; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .m, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .mb, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .mf, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .mh, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .mi, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .mo, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .il { color: #6b46a8; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nf, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .fm { color: #0e6a85; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nd { color: #6b46a8; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nc, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .ne { color: #1f5f8b; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nn { color: #1f5f8b; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nb, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .bp { color: #0b7a60; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .no { color: #6b46a8; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nv, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .vc, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .vg, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .vi, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nl { color: #17211e; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .na { color: #1f5f8b; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .nt { color: #0b7a60; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .err { color: #b42318; }
+body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .c, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .ch, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cm, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .c1, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cs, body[data-scheme="sage"][data-theme="light"] .tab-content pre code.pygcode .cd { font-style: italic; }
 body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .c, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .ch, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .cm, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .cp, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .cpf, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .c1, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .cs, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .cd { color: #8b949e; }
 body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .k, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .kc, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .kd, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .kn, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .kp, body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .kr { color: #ff7b72; }
 body[data-scheme="classic"][data-theme="dark"] .tab-content pre code.pygcode .kt { color: #ff7b72; }
@@ -53607,7 +53723,7 @@ document.addEventListener('keydown', (e) => {
    light variant; the light/dark toggle above picks which variant is shown, so
    the two controls compose. The choice is remembered across visits. ───── */
 /* - Nagesh N Nazare - */
-const SCHEMES = [{"id": "vscode", "label": "VS Code"}, {"id": "monokai", "label": "Monokai"}, {"id": "onedark", "label": "One Dark Pro"}, {"id": "tokyonight", "label": "Tokyo Night"}, {"id": "ayu", "label": "Ayu"}, {"id": "catppuccin", "label": "Catppuccin"}, {"id": "paper", "label": "Paper"}, {"id": "classic", "label": "Classic"}, {"id": "highcontrast", "label": "High Contrast"}];
+const SCHEMES = [{"id": "vscode", "label": "VS Code"}, {"id": "monokai", "label": "Monokai"}, {"id": "onedark", "label": "One Dark Pro"}, {"id": "tokyonight", "label": "Tokyo Night"}, {"id": "ayu", "label": "Ayu"}, {"id": "catppuccin", "label": "Catppuccin"}, {"id": "paper", "label": "Paper"}, {"id": "sage", "label": "Sage"}, {"id": "classic", "label": "Classic"}, {"id": "highcontrast", "label": "High Contrast"}];
 const DEFAULT_SCHEME = 'vscode';
 // A few representative token colors per scheme, used for the menu swatches.
 const SCHEME_SWATCHES = {
@@ -53618,6 +53734,7 @@ const SCHEME_SWATCHES = {
     ayu:          ['#ff8f40', '#aad94c', '#ffb454', '#59c2ff'],
     catppuccin:   ['#cba6f7', '#a6e3a1', '#89b4fa', '#fab387'],
     paper:        ['#9a3412', '#1d4e89', '#3f6212', '#6b21a8'],
+    sage:         ['#0b7a60', '#a8550a', '#1f5f8b', '#6b46a8'],
     classic:      ['#ff7b72', '#a5d6ff', '#d2a8ff', '#7ee787'],
     highcontrast: ['#4fc1ff', '#ffb86c', '#fff95e', '#4effe3']
 };
@@ -54955,7 +55072,7 @@ if (tabMatch) {
 }
 
 /* ───── Liquid glass: real SVG-displacement refraction ─────
-   Inspired by deepika-builds/liquid-glass. Instead of a plain frosted
+   Instead of a plain frosted
    backdrop, each glass surface bends the page behind it at its rim (with a
    faint prism fringe) via a per-element SVG displacement-map backdrop-filter,
    while the interior stays legible. Two presets give light and dark mode a
